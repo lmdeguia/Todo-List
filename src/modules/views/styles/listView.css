@@ -1,0 +1,19 @@
+.todoList{
+  width: 33vw;
+  margin-top: 10vh;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  padding: 20px;
+  border-radius: 16px;
+  min-height: 70vh;
+}
+
+.placeholder{
+  background-color: #edf2f7;
+  border: 1px dashed #cbd5e0;
+  border-radius: 10px;
+}

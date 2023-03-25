@@ -1,0 +1,86 @@
+
+.itemPreviewContainer{
+  width: 100%;
+}
+
+.itemPreview{
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 98%;
+  border-radius: 10px;
+}
+
+.itemPreview:hover{
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.selected, .selected:hover{
+  /* border: 1px solid #0074e0; */
+  background-color: rgba(0, 255, 255, 0.3);
+}
+
+.leftSide{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+  gap: 5px;
+}
+
+.previewCheckbox{
+  cursor: pointer;
+}
+
+.previewOptionsContainer{
+  margin-right: 10px;
+}
+
+.previewOptions{
+  cursor: pointer;
+  background-color: inherit;
+  border: none;
+}
+
+.previewOptions > svg{
+  vertical-align: middle;
+  color: transparent;
+}
+
+.itemPreview:hover svg{
+  color: #aaaaaa;
+}
+
+.itemPreview:hover svg:hover{
+  color: #0074e0;
+}
+
+/* dropdown */
+/* https://www.w3schools.com/howto/howto_js_dropdown.asp */
+
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 120px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content div:hover {background-color: #ddd;}
+
+.show {display: block;}
