@@ -14,21 +14,29 @@
   <div class="content">
 
   </div>
-  <script>
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-  </script>
+
+
+  <div class="dropdown-modal-container">
+    <div class="dropdown-modal">
+      <div class="dropdown-item view-item">View Item</div>
+      <div class="dropdown-item del-item">Delete Item</div>
+    </div>
+  </div>
+
   <script src="bundle.js"></script>
+
+  <script>
+    const disableModal = function(e) {
+      const t = e.target;
+      if (!t.classList.contains('dropdown-item')) {
+        const modalContainer = document.querySelector('.dropdown-modal-container');
+        modalContainer.classList.remove('show');
+      }
+    };
+    const todoList = document.querySelector('.todoList');
+    window.onclick = disableModal;
+    todoList.onscroll = disableModal;
+  </script>
 </body>
 </html>
 

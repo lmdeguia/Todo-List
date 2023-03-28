@@ -1,3 +1,9 @@
+:root{
+  --scrollbar-foreground: #999;
+  --scrollbar-background: #333;
+}
+
+
 .todoList{
   width: 33vw;
   margin-top: 10vh;
@@ -9,11 +15,38 @@
   gap: 5px;
   padding: 20px;
   border-radius: 16px;
-  min-height: 70vh;
+  height: 70vh;
+  width: 30vw;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .placeholder{
   background-color: #edf2f7;
   border: 1px dashed #cbd5e0;
-  border-radius: 10px;
+  border-radius: 12px;
+}
+
+
+.todoList::-webkit-scrollbar{
+  width: 8px;
+  height: 10vh;
+}
+
+.todoList::-webkit-scrollbar-thumb{
+  left: 40px;
+  background: transparent;
+  border-radius: 16px;
+}
+
+.todoList::-webkit-scrollbar-thumb:hover{
+  background: rgba(153, 153, 153, 0.5);
+  border-right: 2px solid white;
+}
+
+.todoList::-webkit-scrollbar-track{
+  height: 50vh;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: transparent;
 }

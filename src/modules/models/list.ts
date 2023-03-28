@@ -16,6 +16,7 @@ class todoList {
 
   remove (item: todoItem): void {
     const idx = this._items.indexOf(item);
+    console.log(`list item ${idx} removed`);
     this._items.splice(idx, 1);
   }
 

@@ -29,7 +29,7 @@ class listControl{
         listControl.placeholder, 
         listControl.targetItem.nextSibling);
       listControl.targetItem.style.width = `${listControl.itemRect.width}px`;
-      listControl.placeholder.style.height = `${listControl.itemRect.height}px`;
+      listControl.placeholder.style.minHeight = `${listControl.itemRect.height}px`;
       listControl.placeholder.style.width = `${listControl.itemRect.width}px`;
     }
   

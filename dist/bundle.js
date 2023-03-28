@@ -1,10 +1,10 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "todoItem": () => (/* binding */ todoItem)
@@ -66,6 +66,7 @@ var todoItem = /** @class */ (function () {
 /* 2 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "todoList": () => (/* binding */ todoList)
@@ -84,6 +85,7 @@ var todoList = /** @class */ (function () {
     };
     todoList.prototype.remove = function (item) {
         var idx = this._items.indexOf(item);
+        console.log("list item ".concat(idx, " removed"));
         this._items.splice(idx, 1);
     };
     todoList.prototype.clearList = function () {
@@ -98,6 +100,7 @@ var todoList = /** @class */ (function () {
 /* 3 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "listView": () => (/* binding */ listView)
@@ -117,29 +120,32 @@ var listView = /** @class */ (function () {
         this.itemViewList = this.target.items.map(function (item) { return new _itemPreview__WEBPACK_IMPORTED_MODULE_0__.itemPreview(item); });
     }
     listView.prototype.genHtml = function () {
+        var _this = this;
         var list = document.createElement('div');
         list.className = 'todoList';
         for (var _i = 0, _a = this.itemViewList; _i < _a.length; _i++) {
             var itemView = _a[_i];
-            var node = itemView.genHtml();
-            node.addEventListener('mousedown', _controls_listControl__WEBPACK_IMPORTED_MODULE_2__.listControl.mouseDown);
-            list.appendChild(node);
+            var preview = itemView.genHtml();
+            preview.addEventListener('mousedown', _controls_listControl__WEBPACK_IMPORTED_MODULE_2__.listControl.mouseDown);
+            list.appendChild(preview);
         }
-        var deletePopups = Array.from(list.querySelectorAll('.delTask'));
-        deletePopups.forEach(function (item) {
-            item.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.stop);
+        var viewItem = document.querySelector('.view-item');
+        viewItem.addEventListener('click', function (e) {
+            _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.openDetail(e, _this.target.items);
         });
-        var editPopups = Array.from(list.querySelectorAll('.editTask'));
-        editPopups.forEach(function (item) {
-            item.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.stop);
+        var delItem = document.querySelector('.del-item');
+        delItem.addEventListener('click', function (e) {
+            _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.delItem(e, _this.target.items);
         });
         var icons = Array.from(list.querySelectorAll('path'));
         var svgs = Array.from(list.querySelectorAll('svg'));
-        icons.forEach(function (item) {
-            item.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.openOptions);
+        svgs.forEach(function (svg) {
+            svg.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.stop);
+            svg.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.openDropdown);
         });
-        svgs.forEach(function (item) {
-            item.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.openOptions);
+        icons.forEach(function (icon) {
+            icon.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.stop);
+            icon.addEventListener('click', _controls_itemControl__WEBPACK_IMPORTED_MODULE_1__.itemPreviewControl.openDropdown);
         });
         return list;
     };
@@ -152,6 +158,7 @@ var listView = /** @class */ (function () {
 /* 4 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "itemPreview": () => (/* binding */ itemPreview)
@@ -211,24 +218,11 @@ var itemPreview = /** @class */ (function () {
         var previewOptions = document.createElement('div');
         previewOptions.className = 'previewOptionsContainer';
         var options = document.createElement('button');
-        var dropDown = document.createElement('div');
-        dropDown.className = 'dropdown-content';
-        var editTask = document.createElement('div');
-        editTask.textContent = 'view details';
-        editTask.className = 'editTask';
-        // editTask.addEventListener('click', itemPreviewControl.stop);
-        var delTask = document.createElement('div');
-        delTask.textContent = 'delete task';
-        delTask.className = 'delTask';
-        // delTask.addEventListener('click', itemPreviewControl.stop);
-        dropDown.appendChild(editTask);
-        dropDown.appendChild(delTask);
         options.className = 'previewOptions';
-        //options.addEventListener('click', itemPreviewControl.openOptions);
-        options.appendChild(dropDown);
-        options.innerHTML += "\n    <svg class=\"optionsIcon\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\">\n      <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7.865 11.153c1.03 0 1.864.8 1.864 1.787 0 .987-.835 1.787-1.864 1.787-1.03 0-1.865-.8-1.865-1.787 0-.987.835-1.787 1.865-1.787zm0-5.566c1.03 0 1.864.8 1.864 1.787 0 .987-.835 1.787-1.864 1.787C6.835 9.16 6 8.36 6 7.374c0-.987.835-1.787 1.865-1.787zm1.871-3.8C9.736.8 8.901 0 7.871 0S6.007.8 6.007 1.787c0 .987.835 1.787 1.864 1.787 1.03 0 1.865-.8 1.865-1.787z\" fill=\"currentColor\">\n      </path>\n    </svg>";
+        options.innerHTML += "\n    <svg class=\"optionsIcon\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" style=\"display: block; float: right;\">\n      <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7.865 11.153c1.03 0 1.864.8 1.864 1.787 0 .987-.835 1.787-1.864 1.787-1.03 0-1.865-.8-1.865-1.787 0-.987.835-1.787 1.865-1.787zm0-5.566c1.03 0 1.864.8 1.864 1.787 0 .987-.835 1.787-1.864 1.787C6.835 9.16 6 8.36 6 7.374c0-.987.835-1.787 1.865-1.787zm1.871-3.8C9.736.8 8.901 0 7.871 0S6.007.8 6.007 1.787c0 .987.835 1.787 1.864 1.787 1.03 0 1.865-.8 1.865-1.787z\" fill=\"currentColor\">\n      </path>\n    </svg>";
         previewOptions.appendChild(options);
         outDiv.appendChild(previewOptions);
+        outDiv.setAttribute('data-key', "".concat(this.target.itemId));
         return outDiv;
     };
     return itemPreview;
@@ -240,15 +234,18 @@ var itemPreview = /** @class */ (function () {
 /* 5 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "itemPreviewControl": () => (/* binding */ itemPreviewControl)
 /* harmony export */ });
+/* harmony import */ var _views_itemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+
 var itemPreviewControl = /** @class */ (function () {
     function itemPreviewControl() {
     }
     itemPreviewControl.checkboxClick = function (e) {
-        e.stopPropagation();
+        e.stopPropagation(); //update later to track checkbox
     };
     itemPreviewControl.focusItem = function (e) {
         var target = e.target;
@@ -268,18 +265,54 @@ var itemPreviewControl = /** @class */ (function () {
             }
         }
     };
-    itemPreviewControl.openOptions = function (e) {
+    itemPreviewControl.openDropdown = function (e) {
+        var modalContainer = document.querySelector('.dropdown-modal-container');
+        var viewItem = document.querySelector('.view-item');
+        var delItem = document.querySelector('.del-item');
         var target = e.target;
-        var t = target;
-        var finalTarget;
-        if (t.localName === 'path') {
-            finalTarget = t.parentElement.previousElementSibling;
+        var finalTarget = target;
+        while (!finalTarget.classList.contains('itemPreview')) {
+            finalTarget = finalTarget.parentElement;
         }
-        else if (t.localName === 'svg') {
-            finalTarget = t.previousElementSibling;
+        var itemId = finalTarget.dataset['key'];
+        viewItem.setAttribute('id', itemId);
+        delItem.setAttribute('id', itemId);
+        var rect = target.getBoundingClientRect();
+        modalContainer.style.position = 'absolute';
+        modalContainer.style.top = "".concat(rect.bottom, "px");
+        modalContainer.style.left = "".concat(rect.left, "px");
+        modalContainer.classList.add('show');
+    };
+    itemPreviewControl.openDetail = function (e, items) {
+        var content = document.querySelector('.content');
+        if (content.children.length > 1) {
+            content.children[1].remove();
         }
-        finalTarget.classList.toggle("show");
-        e.stopPropagation();
+        var viewItem = e.target;
+        var item = items.find(function (todo) { return todo.itemId === viewItem.id; });
+        var detailViewObj = new _views_itemDetail__WEBPACK_IMPORTED_MODULE_0__.itemDetail(item);
+        var detailView = detailViewObj.genHtml();
+        content.appendChild(detailView);
+        var modalContainer = document.querySelector('.dropdown-modal-container');
+        modalContainer.classList.remove('show');
+    };
+    itemPreviewControl.delItem = function (e, items) {
+        var delItem = e.target;
+        var content = document.querySelector('.content');
+        if (content.children.length > 1) {
+            var currentDetail = content.children[1];
+            if (currentDetail.dataset['key'] === delItem.id) {
+                currentDetail.remove();
+            }
+        }
+        var item = items.find(function (todo) { return todo.itemId === delItem.id; });
+        var idx = items.indexOf(item);
+        items.splice(idx, 1);
+        console.log(items);
+        var target = document.querySelector("[data-key='".concat(delItem.id, "'].itemPreview"));
+        target.remove();
+        var modalContainer = document.querySelector('.dropdown-modal-container');
+        modalContainer.classList.remove('show');
     };
     itemPreviewControl.stop = function (e) {
         e.stopPropagation();
@@ -293,6 +326,7 @@ var itemPreviewControl = /** @class */ (function () {
 /* 6 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -343,6 +377,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /* 7 */
 /***/ ((module) => {
 
+"use strict";
 
 
 var stylesInDOM = [];
@@ -432,6 +467,7 @@ module.exports = function (list, options) {
 /* 8 */
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -498,6 +534,7 @@ module.exports = domAPI;
 /* 9 */
 /***/ ((module) => {
 
+"use strict";
 
 
 var memo = {};
@@ -537,6 +574,7 @@ module.exports = insertBySelector;
 /* 10 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -552,6 +590,7 @@ module.exports = setAttributesWithoutAttributes;
 /* 11 */
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -567,6 +606,7 @@ module.exports = insertStyleElement;
 /* 12 */
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -586,6 +626,7 @@ module.exports = styleTagTransform;
 /* 13 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -599,7 +640,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.itemPreviewContainer{\n  width: 100%;\n}\n\n.itemPreview{\n  user-select: none;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  width: 98%;\n  border-radius: 10px;\n}\n\n.itemPreview:hover{\n  background-color: rgba(0, 0, 0, 0.1);\n}\n\n.selected, .selected:hover{\n  /* border: 1px solid #0074e0; */\n  background-color: rgba(0, 255, 255, 0.3);\n}\n\n.leftSide{\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  margin-left: 10px;\n  gap: 5px;\n}\n\n.previewCheckbox{\n  cursor: pointer;\n}\n\n.previewOptionsContainer{\n  margin-right: 10px;\n}\n\n.previewOptions{\n  cursor: pointer;\n  background-color: inherit;\n  border: none;\n}\n\n.previewOptions > svg{\n  vertical-align: middle;\n  color: transparent;\n}\n\n.itemPreview:hover svg{\n  color: #aaaaaa;\n}\n\n.itemPreview:hover svg:hover{\n  color: #0074e0;\n}\n\n/* dropdown */\n/* https://www.w3schools.com/howto/howto_js_dropdown.asp */\n\n\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  background-color: #f1f1f1;\n  width: 120px;\n  overflow: auto;\n  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);\n  z-index: 1;\n  border-radius: 5px;\n}\n\n.dropdown-content div {\n  color: black;\n  padding: 12px 16px;\n  text-decoration: none;\n  display: block;\n}\n\n.dropdown-content div:hover {background-color: #ddd;}\n\n.show {display: block;}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.itemPreviewContainer{\n  width: 100%;\n}\n\n.itemPreview{\n  user-select: none;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  width: 98%;\n  height: 50px;\n  border-radius: 10px;\n}\n\n.itemPreview:hover{\n  background-color: rgba(0, 0, 0, 0.1);\n}\n\n.selected, .selected:hover{\n  /* border: 1px solid #0074e0; */\n  background-color: rgba(0, 255, 255, 0.3);\n}\n\n.leftSide{\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  margin-left: 10px;\n  gap: 5px;\n}\n\n.previewCheckbox{\n  cursor: pointer;\n}\n\n.previewOptionsContainer{\n  margin-right: 10px;\n}\n\n.previewOptions{\n  cursor: pointer;\n  background-color: inherit;\n  border: none;\n}\n\n.previewOptions > svg{\n  position: sticky;\n  color: transparent;\n}\n\n.itemPreview:hover svg{\n  color: #aaaaaa;\n}\n\n.itemPreview:hover svg:hover{\n  color: #0074e0;\n}\n\n/* dropdown */\n/* https://www.w3schools.com/howto/howto_js_dropdown.asp */\n\n\n\n.dropdown-content {\n  display: none;\n  position: relative;\n  left: 40px;\n  top: 40px;\n  background-color: #f1f1f1;\n  width: 120px;\n  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);\n  border-radius: 10px;\n  z-index: 2;\n}\n\n.dropdown-content div{\n  color: black;\n  padding: 12px 16px;\n  text-decoration: none;\n  display: block !important;\n}\n\n.dropdown-content div:nth-child(1) {\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n}\n\n.dropdown-content div:nth-child(2) {\n  border-bottom-left-radius: 10px;\n  border-bottom-right-radius: 10px;\n}\n\n.disabled{\n  color: transparent !important;\n}\n\n.dropdown-content div:hover {background-color: #ddd;}\n\n.show {display: block;}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -608,6 +649,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n.itemPreviewContainer{\n  width: 100
 /* 14 */
 /***/ ((module) => {
 
+"use strict";
 
 
 module.exports = function (i) {
@@ -618,6 +660,7 @@ module.exports = function (i) {
 /* 15 */
 /***/ ((module) => {
 
+"use strict";
 
 
 /*
@@ -708,6 +751,7 @@ module.exports = function (cssWithMappingToString) {
 /* 16 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "listControl": () => (/* binding */ listControl)
@@ -729,7 +773,7 @@ var listControl = /** @class */ (function () {
             listControl.placeholder.classList.add('placeholder');
             listControl.targetItem.parentNode.insertBefore(listControl.placeholder, listControl.targetItem.nextSibling);
             listControl.targetItem.style.width = "".concat(listControl.itemRect.width, "px");
-            listControl.placeholder.style.height = "".concat(listControl.itemRect.height, "px");
+            listControl.placeholder.style.minHeight = "".concat(listControl.itemRect.height, "px");
             listControl.placeholder.style.width = "".concat(listControl.itemRect.width, "px");
         }
         listControl.targetItem.style.position = 'absolute';
@@ -790,6 +834,7 @@ var listControl = /** @class */ (function () {
 /* 17 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -840,6 +885,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /* 18 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -853,7 +899,181 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".todoList{\n  width: 33vw;\n  margin-top: 10vh;\n  border: 1px solid black;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  gap: 5px;\n  padding: 20px;\n  border-radius: 16px;\n  min-height: 70vh;\n}\n\n.placeholder{\n  background-color: #edf2f7;\n  border: 1px dashed #cbd5e0;\n  border-radius: 10px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root{\n  --scrollbar-foreground: #999;\n  --scrollbar-background: #333;\n}\n\n\n.todoList{\n  width: 33vw;\n  margin-top: 10vh;\n  border: 1px solid black;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  gap: 5px;\n  padding: 20px;\n  border-radius: 16px;\n  height: 70vh;\n  width: 30vw;\n  overflow: hidden;\n  overflow-y: scroll;\n}\n\n.placeholder{\n  background-color: #edf2f7;\n  border: 1px dashed #cbd5e0;\n  border-radius: 12px;\n}\n\n\n.todoList::-webkit-scrollbar{\n  width: 8px;\n  height: 10vh;\n}\n\n.todoList::-webkit-scrollbar-thumb{\n  left: 40px;\n  background: transparent;\n  border-radius: 16px;\n}\n\n.todoList::-webkit-scrollbar-thumb:hover{\n  background: rgba(153, 153, 153, 0.5);\n  border-right: 2px solid white;\n}\n\n.todoList::-webkit-scrollbar-track{\n  height: 50vh;\n  margin-top: 10px;\n  margin-bottom: 10px;\n  background: transparent;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+/* 19 */
+/***/ ((module) => {
+
+/* 
+(The MIT License)
+Copyright (c) 2014-2021 Halász Ádám <adam@aimform.com>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+//  Unique Hexatridecimal ID Generator
+// ================================================
+
+//  Dependencies
+// ================================================
+var pid = typeof process !== 'undefined' && process.pid ? process.pid.toString(36) : '' ;
+var address = '';
+if(false){ var i, networkInterfaces, mac, os; } 
+
+//  Exports
+// ================================================
+module.exports = module.exports["default"] = function(prefix, suffix){ return (prefix ? prefix : '') + address + pid + now().toString(36) + (suffix ? suffix : ''); }
+module.exports.process = function(prefix, suffix){ return (prefix ? prefix : '') + pid + now().toString(36) + (suffix ? suffix : ''); }
+module.exports.time    = function(prefix, suffix){ return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : ''); }
+
+//  Helpers
+// ================================================
+function now(){
+    var time = Date.now();
+    var last = now.last || time;
+    return now.last = time > last ? time : last + 1;
+}
+
+
+/***/ }),
+/* 20 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "itemDetail": () => (/* binding */ itemDetail)
+/* harmony export */ });
+/* harmony import */ var _controls_itemDetailControl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _styles_itemDetail_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+
+
+var itemDetail = /** @class */ (function () {
+    function itemDetail(target) {
+        this.target = target;
+        this.target = target;
+    }
+    itemDetail.prototype.genHtml = function () {
+        var itemDetail = document.createElement('div');
+        var closeBtn = document.createElement('span');
+        closeBtn.className = 'close';
+        closeBtn.innerHTML = "&times;";
+        closeBtn.addEventListener('click', _controls_itemDetailControl__WEBPACK_IMPORTED_MODULE_0__.itemDetailControl.closeDetail);
+        itemDetail.appendChild(closeBtn);
+        itemDetail.className = 'itemDetail';
+        var itemTitleContainer = document.createElement('div');
+        var itemTitle = document.createElement('h2');
+        itemTitle.textContent = this.target.title;
+        itemTitleContainer.appendChild(itemTitle);
+        var itemId = document.createElement('div');
+        itemId.textContent = this.target.itemId;
+        itemTitleContainer.className = 'itemTitleContainer';
+        itemDetail.setAttribute('data-key', "".concat(this.target.itemId));
+        itemDetail.appendChild(itemTitleContainer);
+        itemDetail.appendChild(itemId);
+        return itemDetail;
+    };
+    return itemDetail;
+}());
+
+
+
+/***/ }),
+/* 21 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "itemDetailControl": () => (/* binding */ itemDetailControl)
+/* harmony export */ });
+var itemDetailControl = /** @class */ (function () {
+    function itemDetailControl() {
+    }
+    itemDetailControl.closeDetail = function (e) {
+        var target = e.target;
+        target.parentElement.remove();
+    };
+    return itemDetailControl;
+}());
+
+
+
+/***/ }),
+/* 22 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(10);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(11);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_itemDetail_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(23);
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_itemDetail_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_itemDetail_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_itemDetail_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_itemDetail_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+/* 23 */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".itemDetail{\n  width: 33vw;\n  margin-top: 10vh;\n  border: 1px solid black;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n  gap: 5px;\n  padding: 20px;\n  padding-left: 40px;\n  border-radius: 16px;\n  min-height: 70vh;\n  width: 30vw;\n}\n\n.itemTitleContainer{\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start;\n  align-items: center;\n  border-radius: 10px;\n  padding-left: 10px;\n  padding-right: 10px;\n  width: 100%;\n}\n\n.itemTitleContainer:hover{\n  background-color: rgba(0, 0, 0, 0.1);\n}\n\n.itemTitle{\n  padding-top: 0;\n  padding-bottom: 0;\n}\n\n\n.close{\n  cursor: pointer;\n  position: relative;\n  top: -10px;\n  left: 12rem;\n  color: #aaaaaa;\n  font-size: 28px;\n  font-weight: bold;\n}\n\n.close:hover{\n  color: #4a4a4a;\n  \n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -933,12 +1153,16 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".todoList{\n  width: 33vw;\n  margin-t
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_models_item__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _modules_models_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var _modules_views_listView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+/* harmony import */ var uniqid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+/* harmony import */ var uniqid__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uniqid__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -948,61 +1172,24 @@ var _a = rawTestDateParams.map(function (item) {
     var idx = rawTestDateParams.indexOf(item);
     return (idx === 1) ? (+item) - 1 : +item;
 }), testYear = _a[0], testMonth = _a[1], testDay = _a[2];
-var params1 = {
-    completed: false,
-    title: 'Test Todo Item 1',
-    createdDate: new Date(),
-    dueDate: new Date(testYear, testMonth, testDay),
-    itemId: 0,
-    priority: 'Low',
-};
-var params2 = {
-    completed: false,
-    title: 'Test Todo Item 2',
-    createdDate: new Date(),
-    dueDate: new Date(testYear, testMonth, testDay),
-    itemId: 0,
-    priority: 'Medium',
-};
-var params3 = {
-    completed: false,
-    title: 'Test Todo Item 3',
-    createdDate: new Date(),
-    dueDate: new Date(testYear, testMonth, testDay),
-    itemId: 0,
-    priority: 'High',
-};
-var params4 = {
-    completed: false,
-    title: 'Test Todo Item 4',
-    createdDate: new Date(),
-    dueDate: new Date(testYear, testMonth, testDay),
-    itemId: 0,
-    priority: 'High',
-};
-var params5 = {
-    completed: false,
-    title: 'Test Todo Item 5',
-    createdDate: new Date(),
-    dueDate: new Date(testYear, testMonth, testDay),
-    itemId: 0,
-    priority: 'High',
-};
-var newItem1 = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params1);
-var newItem2 = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params2);
-var newItem3 = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params3);
-var newItem4 = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params4);
-var newItem5 = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params5);
 var todo1 = new _modules_models_list__WEBPACK_IMPORTED_MODULE_1__.todoList();
-todo1.add(newItem1);
-todo1.add(newItem2);
-todo1.add(newItem3);
-todo1.add(newItem4);
-todo1.add(newItem5);
+var itemAmount = 15;
+for (var i = 0; i < itemAmount; i++) {
+    var params = {
+        completed: false,
+        title: "Test Todo Item ".concat(i + 1),
+        createdDate: new Date(),
+        dueDate: new Date(testYear, testMonth, testDay),
+        itemId: "".concat(uniqid__WEBPACK_IMPORTED_MODULE_3__()),
+        priority: 'High',
+    };
+    var newItem = new _modules_models_item__WEBPACK_IMPORTED_MODULE_0__.todoItem(params);
+    todo1.add(newItem);
+}
 var newListView = new _modules_views_listView__WEBPACK_IMPORTED_MODULE_2__.listView(todo1);
-var itemContainer = document.querySelector('.content');
+var content = document.querySelector('.content');
 var listviewHtml = newListView.genHtml();
-itemContainer.appendChild(listviewHtml);
+content.appendChild(listviewHtml);
 
 })();
 

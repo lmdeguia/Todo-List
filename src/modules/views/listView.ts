@@ -3,12 +3,16 @@ import { itemPreview } from "./itemPreview";
 import { itemPreviewControl } from "../controls/itemControl";
 import { listControl } from "../controls/listControl";
 import "./styles/listView.css";
+import { itemDetail } from "./itemDetail";
+import { itemDetailControl } from "../controls/itemDetailControl";
 
 class listView {
   private itemViewList: Array<itemPreview>;
+  private itemDetailList: Array<itemDetail>;
 
   constructor(private target: todoList) {
     this.target = target;
+      
     this.itemViewList = this.target.items.map(
       (item) => new itemPreview(item));
   }
@@ -18,29 +22,32 @@ class listView {
     list.className = 'todoList';
 
     for (let itemView of this.itemViewList) {
-      const node = itemView.genHtml();
-      node.addEventListener('mousedown', listControl.mouseDown);
-      list.appendChild(node);
+      const preview = itemView.genHtml();
+      preview.addEventListener('mousedown', listControl.mouseDown);
+      list.appendChild(preview);
     }
 
-    const deletePopups = Array.from(list.querySelectorAll('.delTask'));
-    deletePopups.forEach((item) =>  {
-      item.addEventListener('click', itemPreviewControl.stop);
-    })
+    const viewItem = document.querySelector('.view-item') as HTMLDivElement;
+    viewItem.addEventListener('click', (e) => {
+      itemPreviewControl.openDetail(e, this.target.items);
+    });
 
-    const editPopups = Array.from(list.querySelectorAll('.editTask'));
-    editPopups.forEach((item) =>  {
-      item.addEventListener('click', itemPreviewControl.stop);
-    })
+    const delItem = document.querySelector('.del-item') as HTMLDivElement;
+    delItem.addEventListener('click', (e) => {
+      itemPreviewControl.delItem(e, this.target.items)
+    });
 
     const icons = Array.from(list.querySelectorAll('path'));
     const svgs = Array.from(list.querySelectorAll('svg'));
-    icons.forEach((item) => {
-      item.addEventListener('click', itemPreviewControl.openOptions);
-    })
-    svgs.forEach((item) => {
-      item.addEventListener('click', itemPreviewControl.openOptions);
-    })
+
+    svgs.forEach((svg) => {
+      svg.addEventListener('click', itemPreviewControl.stop);
+      svg.addEventListener('click', itemPreviewControl.openDropdown);
+    });
+    icons.forEach((icon) => {
+      icon.addEventListener('click', itemPreviewControl.stop);
+      icon.addEventListener('click', itemPreviewControl.openDropdown);
+    });
 
     return list;
   }

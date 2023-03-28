@@ -3,7 +3,7 @@ type discretePriority = "High" | "Medium" | "Low";
 interface Todo {
   completed: boolean, 
   title: string, 
-  itemId: number,
+  itemId: string,
   createdDate: Date, 
   dueDate?: Date,
   priority?: discretePriority
@@ -22,7 +22,7 @@ class todoItem{
   get title () : string { return this.props.title; }
   get createdDate () : Date { return this.props.createdDate; }
   get dueDate () : Date { return this.props.dueDate; }
-  get itemId () : number { return this.props.itemId; }
+  get itemId () : string { return this.props.itemId; }
   get priority () : discretePriority { return this.props.priority; }
   get notes () : string { return this.props.notes; }
   
@@ -30,7 +30,7 @@ class todoItem{
   set completed (newValue: boolean) { this.props.completed  = newValue;}
   set title (newValue: string) { this.props.title = newValue; }
   set dueDate (newValue: Date) { this.props.dueDate = newValue; }
-  set itemId (newValue: number) { this.props.itemId = newValue; }
+  set itemId (newValue: string) { this.props.itemId = newValue; }
   set priority (newValue: discretePriority){ this.props.priority = newValue; }
   set notes (newValue: string)  { this.props.notes = newValue; }
 
